@@ -1,0 +1,8 @@
+.table>thead:first-child>tr:first-child>th.no-sort { padding-right:0px; }
+
+
+.table.table-noborder>thead>tr>th, .table.table-noborder>tbody>tr>th, 
+.table.table-noborder>tfoot>tr>th, .table.table-noborder>thead>tr>td, 
+.table.table-noborder>tbody>tr>td, .table.table-noborder>tfoot>tr>td { border:0px; }
+
+.btn-header { margin-left:15px; }
