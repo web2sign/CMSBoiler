@@ -1,4 +1,5 @@
 <?php
+
 use Modules\Admin\Entities\Usession, Carbon\Carbon, Request, Route;
 
 class Hooks {

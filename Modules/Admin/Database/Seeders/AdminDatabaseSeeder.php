@@ -59,7 +59,7 @@ class AdminDatabaseSeeder extends Seeder
         'username'      => 'admin',
         'email'         => 'admin@sportsace.com.au',
         'password'      => bcrypt('d4t4b0ss')
-    ])->usermeta()->saveMany([
+    ])->meta()->saveMany([
       new Usermeta([
         'metakey' => 'first_name',
         'metavalue' => 'Roy Vincent'
@@ -79,6 +79,45 @@ class AdminDatabaseSeeder extends Seeder
     ]);
     User::find(1)->groups()->sync([1]);
 
+
+
+    Page::create([
+      'post_type' => 'page',
+      'slug' => 'page-1',
+      'title'  => 'Parent Page 1',
+      'description' => 'Description Page 1',
+      'keywords' => 'Keywords Page 1',
+      'content' => 'Page Content 1',
+    ]);
+
+    Page::create([
+      'slug' => 'page-2',
+      'post_type' => 'page',
+      'title'  => 'Parent Page 2',
+      'description' => 'Description Page 2',
+      'keywords' => 'Keywords Page 2',
+      'content' => 'Page Content 2',
+    ]);
+
+    Page::create([
+      'parent_id' => 1,
+      'slug' => 'page-3',
+      'post_type' => 'page',
+      'title'  => 'Parent Page 3',
+      'description' => 'Description Page 3',
+      'keywords' => 'Keywords Page 3',
+      'content' => 'Page Content 3',
+    ]);
+
+    Page::create([
+      'parent_id' => 3,
+      'slug' => 'page-4',
+      'post_type' => 'page',
+      'title'  => 'Parent Page 4',
+      'description' => 'Description Page 4',
+      'keywords' => 'Keywords Page 4',
+      'content' => 'Page Content 3',
+    ]);
 
   }
 }

@@ -7,6 +7,8 @@ use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Hooks;
 
+use Modules\Admin\Entities\Page;
+
 class PageController extends Controller
 {
     /**
@@ -19,35 +21,61 @@ class PageController extends Controller
     public function hook(){
       Hooks::add('dashboard',function(){
 
-        $html = '
-  <div class="col-lg-4">
-    <!-- small box -->
-    <div class="small-box bg-yellow">
-      <div class="inner">
-        <h3>44</h3>
+      $html = '
+      <div class="col-lg-4">
+        <!-- small box -->
+        <div class="small-box bg-yellow">
+          <div class="inner">
+            <h3>44</h3>
 
-        <p>User Registrations</p>
+            <p>User Registrations</p>
+          </div>
+          <div class="icon">
+            <i class="ion ion-person-add"></i>
+          </div>
+          <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+        </div>
       </div>
-      <div class="icon">
-        <i class="ion ion-person-add"></i>
-      </div>
-      <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-    </div>
-  </div>
-  <!-- ./col -->
-        ';
+      <!-- ./col -->';
 
         return $html;
       }, 10);
+    }
+
+
+    /* 
+     * Set a defualt post type for page
+     *
+    **/
+    public $post_type = "page";
+
+    public function __construct(Request $request) {
+      $action = $request->route()->getAction();
+      $post_type = isset($action['post_type']) ? $action['post_type'] : 'page';
+      $this->post_type = $post_type;
     }
 
     /**
      * Display a listing of the resource.
      * @return Response
      */
-    public function index()
+    public function index($page=1, Request $request)
     {
-        return view('admin::page.index');
+
+      $limit = $request->get('limit', env('LIMIT'));
+
+      $pages = Page::where(function($q){
+        $q->where('parent_id',null);
+        $q->orWhere('parent_id',0);
+      })->with(['children','children.children']);
+
+      dd($pages->get()->toArray());
+
+
+      return view('admin::page.index',[
+        'post_type' => $this->post_type
+      ]);
+
     }
 
     /**

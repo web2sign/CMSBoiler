@@ -36,13 +36,13 @@ class Setter
 
               if( method_exists($controller, "hook") ) {
                 $controllers[] = "$controller@hook";
+                App::call("$controller@hook");
               }
             }
         }
     }
 
-   
-    App::call($controllers[0]);
+    
 
     return $next($request);
   }

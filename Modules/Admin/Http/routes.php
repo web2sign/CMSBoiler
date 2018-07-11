@@ -15,39 +15,47 @@ Route::group([
       'as' => 'module.admin.dashboard.read'
     ]);
     
+    
     Route::get('pages', [
       'uses' => 'PageController@index',
-      'as' => 'module.admin.page.read'
+      'as' => 'module.admin.page.read',
+      'post_type' => 'page'
     ]);
 
     Route::get('pages/{page}', [
       'uses' => 'PageController@index',
-      'as' => 'module.admin.page.read'
+      'as' => 'module.admin.page.read',
+      'post_type' => 'page'
     ]);
 
     Route::get('page', [
       'uses' => 'PageController@index',
-      'as' => 'module.admin.page.read'
+      'as' => 'module.admin.page.read',
+      'post_type' => 'page'
     ]);
 
     Route::get('page/create', [
       'uses' => 'PageController@create',
-      'as' => 'module.admin.page.create'
+      'as' => 'module.admin.page.create',
+      'post_type' => 'page'
     ]);
 
     Route::post('page/create', [
       'uses' => 'PageController@store',
-      'as' => 'module.admin.page.create'
+      'as' => 'module.admin.page.create',
+      'post_type' => 'page'
     ]);
 
     Route::get('page/{id}/update', [
       'uses' => 'PageController@edit',
-      'as' => 'module.admin.page.update'
+      'as' => 'module.admin.page.update',
+      'post_type' => 'page'
     ]);
 
     Route::post('page/{id}/update', [
       'uses' => 'PageController@update',
-      'as' => 'module.admin.page.update'
+      'as' => 'module.admin.page.update',
+      'post_type' => 'page'
     ]);
 
     Route::post('page/{id}/delete', [

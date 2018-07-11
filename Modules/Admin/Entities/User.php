@@ -15,7 +15,7 @@ class User extends Model
     return $this->belongsToMany(Group::class,'user_group','group_id','user_id');
   }
 
-  public function usermeta() {
+  public function meta() {
     return $this->hasMany(Usermeta::class,'user_id','id');
   }
 
