@@ -81,14 +81,18 @@ class CreateSiteTables extends Migration
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->default(0);
+            $table->string('slug', 55);
+            $table->boolean('status')->default(false);
             $table->string('title', 55);
-            $table->string('post_type', 30);
-            $table->string('slug', 55)->unique();
+            $table->string('post_type', 30)->default('page');
             $table->text('description')->nullable();
             $table->text('keywords')->nullable();
             $table->longText('content')->nullable();
+            $table->unique(['post_type','slug']);
             $table->timestamps();
         });
+
+
 
         Schema::create('pagemeta', function (Blueprint $table) {
           $table->increments('id');

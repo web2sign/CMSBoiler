@@ -15,14 +15,8 @@ Route::group([
       'as' => 'module.admin.dashboard.read'
     ]);
     
-    
-    Route::get('pages', [
-      'uses' => 'PageController@index',
-      'as' => 'module.admin.page.read',
-      'post_type' => 'page'
-    ]);
 
-    Route::get('pages/{page}', [
+    Route::get('pages', [
       'uses' => 'PageController@index',
       'as' => 'module.admin.page.read',
       'post_type' => 'page'
@@ -62,7 +56,6 @@ Route::group([
       'uses' => 'PageController@delete',
       'as' => 'module.admin.page.delete'
     ]);
-
   }
 );
 
@@ -73,15 +66,8 @@ Route::group([
   'prefix' => 'admin', 
   'namespace' => 'Modules\Admin\Http\Controllers'], 
   function() {
-
-    Route::get('login', [
-      'as'    => 'module.admin.login',
-      'uses' => 'LoginController@getLogin'
-    ]);
-
-    Route::post('login', [
-      'as'        => 'module.admin.login',
-      'uses'      => 'LoginController@postLogin'
-    ]);
+    Route::get('logout','LoginController@getLogout');
+    Route::get('login', 'LoginController@getLogin');
+    Route::post('login', 'LoginController@postLogin');
   }
 );

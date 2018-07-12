@@ -2,12 +2,12 @@
 
 namespace Modules\Admin\Http\Controllers;
 
-//use Illuminate\Http\Request;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\Usession;
-use Modules\Admin\Http\Requests\LoginValidation as Requests;
-use Carbon\Carbon;
+use Modules\Admin\Http\Requests\Login as FormRequest;
+use Carbon\Carbon, Session;
 
 class LoginController extends Controller
 {
@@ -20,11 +20,21 @@ class LoginController extends Controller
       return view('admin::login');
     }
 
+
+    public function getLogout(Request $request){
+      if( $session_key = $request->session()->get('session_key') ) {
+        Usession::where('session_key',$session_key)->delete();
+        Session::flush();
+      }
+
+      return redirect()->to('admin/login')->send();
+    }
+
     /**
      * Show the form for creating a new resource.
      * @return Response
      */
-    public function postLogin(Requests $request)
+    public function postLogin(FormRequest $request)
     {
       //dd( $request->all() );
       $request->session()->put(['session_key'=>$request->get('session_key')]);

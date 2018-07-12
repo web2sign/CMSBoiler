@@ -43,7 +43,7 @@
   </ul>
 @endif
 
-      <form action="{{ url('admin/page/create') }}" method="post">
+      <form action="{{ url('admin/page/'.$page->id.'/update') }}" method="post">
         @csrf
       
         <div class="row">
@@ -54,7 +54,7 @@
                 <h3 class="box-title">Page Title</h3>
               </div>
               <div class="box-body">
-                <input required="required" class="form-control input-lg" type="text" placeholder="Title" name="title" />
+                <input required="required" class="form-control input-lg" type="text" placeholder="Title" name="title" value="{{ request('title', $page->title) }}" />
               </div>
               <!-- /.box-body -->
             </div>

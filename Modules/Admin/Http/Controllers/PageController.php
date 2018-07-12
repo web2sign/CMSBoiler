@@ -5,7 +5,8 @@ namespace Modules\Admin\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
-use Hooks;
+use Modules\Admin\Http\Requests\Page as FormRequest;
+use Hooks,DB;
 
 use Modules\Admin\Entities\Page;
 
@@ -20,20 +21,20 @@ class PageController extends Controller
      */
     public function hook(){
       Hooks::add('dashboard',function(){
-
+      $active_pages = Page::where('status',true)->count();
       $html = '
       <div class="col-lg-4">
         <!-- small box -->
-        <div class="small-box bg-yellow">
+        <div class="small-box bg-green">
           <div class="inner">
-            <h3>44</h3>
+            <h3>'.$active_pages.'</h3>
 
-            <p>User Registrations</p>
+            <p>Active pages</p>
           </div>
           <div class="icon">
-            <i class="ion ion-person-add"></i>
+            <i class="ion ion-folder"></i>
           </div>
-          <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+          <a href="' . url('admin/pages') . '" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
       <!-- ./col -->';
@@ -53,27 +54,43 @@ class PageController extends Controller
       $action = $request->route()->getAction();
       $post_type = isset($action['post_type']) ? $action['post_type'] : 'page';
       $this->post_type = $post_type;
+      $request->request->add(['__post_type'=>$post_type]);
     }
 
     /**
      * Display a listing of the resource.
      * @return Response
      */
-    public function index($page=1, Request $request)
+    public function index(Request $request)
     {
 
       $limit = $request->get('limit', env('LIMIT'));
+      $search = $request->get('s');
+      $sort = $request->get('sort');
+      $by = $request->get('by');
+      //dd( Page::paginate(1) );
+      $pages = Page::orderByRaw("
+        CASE 
+        WHEN parent_id <> 0 THEN parent_id
+        ELSE id
+        END DESC,
+        created_at ASC
+      ");
 
-      $pages = Page::where(function($q){
-        $q->where('parent_id',null);
-        $q->orWhere('parent_id',0);
-      })->with(['children','children.children']);
+      if($search) {
+        $pages = $pages->where(function($q) use($search){
+          $q->where( 'title', 'ilike', "%$search%" );
+          $q->orWhere('content', 'ilike', "%$search%" );
+        });
+      }
 
-      dd($pages->get()->toArray());
 
+      $pagination = $pages->paginate($limit);
 
       return view('admin::page.index',[
-        'post_type' => $this->post_type
+        'post_type' => $this->post_type,
+        'pages' => $pages->get(),
+        'pagination' => $pagination
       ]);
 
     }
@@ -84,7 +101,10 @@ class PageController extends Controller
      */
     public function create()
     {
-        return view('admin::page.create');
+      $parents = Page::select(['id','title'])->where('parent_id', 0);
+      return view('admin::page.create',[
+        'parents' => $parents->get()
+      ]);
     }
 
     /**
@@ -92,9 +112,11 @@ class PageController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function store(Request $request)
+    public function store(FormRequest $request)
     {
-      dd($request->all());
+      $page = Page::create($request->all());
+      return redirect()->to('admin/page/' . $page->id . '/update')->with('status', 'Page has been successfully created!')->send();
+      
     }
 
     /**
@@ -110,9 +132,16 @@ class PageController extends Controller
      * Show the form for editing the specified resource.
      * @return Response
      */
-    public function edit()
+    public function edit($id)
     {
-        return view('admin::page.update');
+      $parents = Page::select(['id','title'])->where('parent_id', 0);
+
+      $page = Page::with('parent')->find($id);
+
+      return view('admin::page.update',[
+        'parents' => $parents->get(),
+        'page' => $page
+      ]);
     }
 
     /**
@@ -120,8 +149,16 @@ class PageController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(Request $request)
+    public function update($id, Request $request)
     {
+      $parents = Page::select(['id','title'])->where('parent_id', 0);
+
+      $page = Page::with('parent')->find($id);
+
+      return view('admin::page.update',[
+        'parents' => $parents->get(),
+        'page' => $page
+      ]);
     }
 
 

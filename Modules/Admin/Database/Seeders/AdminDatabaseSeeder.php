@@ -82,6 +82,7 @@ class AdminDatabaseSeeder extends Seeder
 
 
     Page::create([
+      'status' => true,
       'post_type' => 'page',
       'slug' => 'page-1',
       'title'  => 'Parent Page 1',
@@ -110,13 +111,33 @@ class AdminDatabaseSeeder extends Seeder
     ]);
 
     Page::create([
-      'parent_id' => 3,
+      'parent_id' => 2,
       'slug' => 'page-4',
       'post_type' => 'page',
       'title'  => 'Parent Page 4',
       'description' => 'Description Page 4',
       'keywords' => 'Keywords Page 4',
-      'content' => 'Page Content 3',
+      'content' => 'Page Content 4',
+    ]);
+
+    Page::create([
+      'parent_id' => 1,
+      'slug' => 'page-5',
+      'post_type' => 'page',
+      'title'  => 'Parent Page 5',
+      'description' => 'Description Page 5',
+      'keywords' => 'Keywords Page 5',
+      'content' => 'Page Content 5',
+    ]);
+
+    Page::create([
+      'parent_id' => 2,
+      'slug' => 'page-6',
+      'post_type' => 'page',
+      'title'  => 'Parent Page 6',
+      'description' => 'Description Page 6',
+      'keywords' => 'Keywords Page 6',
+      'content' => 'Page Content 6',
     ]);
 
   }

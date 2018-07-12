@@ -6,3 +6,7 @@
 .table.table-noborder>tbody>tr>td, .table.table-noborder>tfoot>tr>td { border:0px; }
 
 .btn-header { margin-left:15px; }
+
+
+
+ul.callout { padding-left:30px; }

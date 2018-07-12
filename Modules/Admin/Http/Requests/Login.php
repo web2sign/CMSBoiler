@@ -8,7 +8,7 @@ use Modules\Admin\Entities\Usession;
 use Illuminate\Contracts\Hashing\Hasher;
 use Route;
 
-class LoginValidation extends FormRequest
+class Login extends FormRequest
 {
   /**
    * Get the validation rules that apply to the request.

@@ -16,7 +16,7 @@ class Page extends Model
 
 
   public function parent(){
-    return $this->belongsToOne(Page::class,'parent_id');
+    return $this->hasOne(Page::class,'id', 'parent_id');
   }
 
   public function children(){
