@@ -12,9 +12,12 @@ CMSBoiler is inspired of Wordpress CMS though it's created using laravel. This i
 CMSBoiler is integrated with AdminLTE to be its default theme in Admin Panel.
 
 
-## Credits
+
+
+## Thanks to:
 
  - [Laravel](https://www.laravel.com)
+ - [Wordpres](https://www.wordpress.org)
  - [AdminLTE](https://adminlte.io)
 
 ## License
