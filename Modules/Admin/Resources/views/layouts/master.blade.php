@@ -215,8 +215,9 @@
         <li class="header">MAIN NAVIGATION</li>
         
         <li{!! (Request::is('admin/dashboard') ? ' class="active"' : '') !!}><a href="{{ url('admin/dashboard') }}"><i class="fa fa-dashboard"></i> <span>Dashboard</span></a></li>
+        <li{!! (Request::is('admin/media/files') ? ' class="active"' : '') !!}><a href="{{ url('admin/media/files') }}"><i class="fa fa-file"></i> <span>Media Library</span></a></li>
         <li class="treeview {!! (Request::is('admin/pages') || Request::is('admin/pages/*')  || Request::is('admin/page/*') ? ' active' : '') !!}">
-          <a href="#"><i class="fa fa-file"></i> <span>Manage Pages</span>
+          <a href="#"><i class="fa fa-book"></i> <span>Manage Pages</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>

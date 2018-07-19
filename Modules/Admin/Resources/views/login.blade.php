@@ -18,26 +18,19 @@
 @endsection
 
 
-@if ($errors->any())
-  <ul class="callout callout-danger"> 
-@foreach ( $errors->all() as $error)
-  <li>{{ $error }}</li>
-@endforeach
-  </ul>
-
-  <script>
-  jQuery(document).ready(function($){
-    sweetAlert("", "{{$message['message']}}", "{{$message['type']}}");
-  });
-  </script>
-    
-@endif
 
 @section('body')
 <div class="login-box">
   <div class="login-logo">
     <a href="{{ url('/') }}"><strong>Control Panel</strong></a>
   </div>
+@if ($errors->any())
+  <ul class="callout callout-danger" style="padding-left:30px"> 
+@foreach ( $errors->all() as $error)
+  <li>{{ $error }}</li>
+@endforeach
+  </ul>
+@endif
 
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start your session</p>

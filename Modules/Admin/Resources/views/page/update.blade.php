@@ -63,7 +63,7 @@
                 <h3 class="box-title">Page Content</h3>
               </div>
               <div class="box-body">
-                <textarea required="required" class="form-control ckeditor" name="content" placeholder="Content"></textarea>
+                <textarea required="required" class="form-control ckeditor" name="content" placeholder="Content">{{ request('content', $page->content) }}</textarea>
               </div>
               <!-- /.box-body -->
             </div>
@@ -75,11 +75,11 @@
               <div class="box-body">
                 <p>
                   <label>Meta Keywords</label>
-                  <textarea name="meta_keywords" class="form-control" rows="2" placeholder="e.g. gundam, robots, mechanical"></textarea>
+                  <textarea name="meta_keywords" class="form-control" rows="2" placeholder="e.g. gundam, robots, mechanical">{{ request('meta_keywords', $page->meta_keywords) }}</textarea>
                 </p>
                 <p>
                   <label>Meta Description</label>
-                  <textarea name="meta_description" class="form-control" rows="4" placeholder="e.g. Model kits depicting the vehicles and characters of the fictional Gundam."></textarea>
+                  <textarea name="meta_description" class="form-control" rows="4" placeholder="e.g. Model kits depicting the vehicles and characters of the fictional Gundam.">{{ request('meta_description', $page->meta_description) }}</textarea>
                 </p>
               </div>
               <!-- /.box-body -->
@@ -104,7 +104,7 @@
                 </p>
                 <p>
                   <label>Slug</label>
-                  <input required="required" name="slug" class="form-control input-lg" type="text" placeholder="Slug">
+                  <input value="{{ request('slug', $page->slug) }}" required="required" name="slug" class="form-control input-lg" type="text" placeholder="Slug">
                   <small style="color:#999">{{ url('/') }}/<strong>slug</strong></small>
                 </p>
                 
@@ -120,8 +120,8 @@
 
 
                 <p>
-                  <label>Featured Image</label>
-                  <input type="file" name="featured_image">
+                  <label>Featured Image</label><br>
+                  <a class="btn btn-small btn-success">Choose Image</a>
                 </p>
                 <br>
                 

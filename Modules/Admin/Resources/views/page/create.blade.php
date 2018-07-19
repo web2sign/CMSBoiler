@@ -120,8 +120,8 @@
 
 
                 <p>
-                  <label>Featured Image</label>
-                  <input type="file" name="featured_image">
+                  <label>Featured Image</label><br>
+                  <a class="btn btn-small btn-success">Choose Image</a>
                 </p>
                 <br>
                 

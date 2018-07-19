@@ -71,12 +71,11 @@ class PageController extends Controller
       //dd( Page::paginate(1) );
       $pages = Page::orderByRaw("
         CASE 
-        WHEN parent_id <> 0 THEN parent_id
-        ELSE id
-        END DESC,
-        created_at ASC
+        WHEN parent_id = 0 THEN id
+        ELSE parent_id
+        END ASC
       ");
-
+      
       if($search) {
         $pages = $pages->where(function($q) use($search){
           $q->where( 'title', 'ilike', "%$search%" );
