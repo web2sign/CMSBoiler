@@ -16,7 +16,7 @@ class UploadRequest extends FormRequest
   public function rules()
   {
       return [
-        'qqfile' => 'required|file|max:5120' // 10mb
+        'qqfile' => 'required|file|max:5120|mimes:jpeg,bmp,png,jpg,gif,pdf,doc,docx,xls,xlsx,zip,key,mp3,m4a,ogg,wav,avi,mp4.3gp' // 5mb
       ];
   }
 

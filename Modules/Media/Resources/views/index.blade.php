@@ -111,8 +111,8 @@
             '<h2 class="mb-3">' + opts.title + '</h2>' +
             '<p>' + opts.message + '</p>' +
             '<p class="text-right">' +
-            '<a data-value="0" data-fancybox-close href="javascript:;" class="btn btn-default">' + opts.noButton + '</a> &nbsp;' +
-            '<button data-value="1" data-fancybox-close class="btn btn-warning">' + opts.okButton + '</button>' +
+            '<a data-value="0" data-fancybox-close href="javascript:;" class="btn btn-lg btn-default">' + opts.noButton + '</a> &nbsp;' +
+            '<button data-value="1" data-fancybox-close class="btn btn-lg btn-warning">' + opts.okButton + '</button>' +
             '</p>' +
             '</div>',
           opts: {
