@@ -100,3 +100,60 @@ a.media-library-info:hover {
   white-space: nowrap; 
   text-overflow: ellipsis;
 }
+
+
+
+   /*
+
+    Styles for animated modal
+    =========================
+
+    */
+
+    /* Start state */
+    .animated-modal {
+        max-width: 550px;
+        min-width: 320px;
+        border-radius: 4px;
+        overflow: hidden;
+        background: linear-gradient(45deg, #543093 32%, #d960ae 100%);
+
+        transform: translateY(-80px);
+        transition: all .5s; /* Should match `data-animation-duration` parameter */
+    }
+
+    .animated-modal * {
+        color: #fff;
+    }
+
+    .animated-modal h2,
+    .animated-modal p {
+        transform: translateY(-40px);
+        opacity: 0;
+
+        transition-property: transform, opacity;
+        transition-duration: .3s;
+    }
+
+    /* Final state */
+    .fancybox-slide--current .animated-modal,
+    .fancybox-slide--current .animated-modal h2,
+    .fancybox-slide--current .animated-modal p {
+        transform: translateY(0);
+        opacity: 1;
+
+        transition-duration: .3s;
+    }
+
+    /* Reveal content with different delays */
+    .fancybox-slide--current .animated-modal h2 {
+        transition-delay: .1s;
+    }
+
+    .fancybox-slide--current .animated-modal p {
+        transition-delay: .4s;
+    }
+
+    .fancybox-slide--current .animated-modal p:first-of-type {
+        transition-delay: .2s;
+    }

@@ -22,6 +22,11 @@ Route::group([
       'uses' => 'MediaController@info',
       'as' => 'module.admin.media.read'
     ]);
+
+    Route::post('media/file/{id}/delete', [
+      'uses' => 'MediaController@destroy',
+      'as' => 'module.admin.media.delete'
+    ]);
 });
 
 

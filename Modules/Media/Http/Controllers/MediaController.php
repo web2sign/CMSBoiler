@@ -23,6 +23,8 @@ class MediaController extends Controller
     ]);
   }
 
+
+
     /**
      * Display a listing of the resource.
      * @return Response
@@ -166,7 +168,16 @@ class MediaController extends Controller
      * Remove the specified resource from storage.
      * @return Response
      */
-    public function destroy()
+    public function destroy($id)
     {
+      $file = Media::find($id);
+
+      if(File::exists($file->path)) {
+        File::delete($file->path);
+      }
+      $file->delete();
+
+      return ['success'=> true];
     }
+
 }

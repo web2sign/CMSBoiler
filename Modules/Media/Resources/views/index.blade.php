@@ -93,6 +93,50 @@
   <script>
     $(function () {
 
+      // Step 1: Create reusable jQuery plugin
+      // =====================================
+
+      $.fancyConfirm = function (opts) {
+        opts = $.extend(true, {
+          title: 'Are you sure?',
+          message: '',
+          okButton: 'OK',
+          noButton: 'Cancel',
+          callback: $.noop
+        }, opts || {});
+
+        $.fancybox.open({
+          type: 'html',
+          src: '<div class="fc-content p-5 rounded">' +
+            '<h2 class="mb-3">' + opts.title + '</h2>' +
+            '<p>' + opts.message + '</p>' +
+            '<p class="text-right">' +
+            '<a data-value="0" data-fancybox-close href="javascript:;" class="btn btn-default">' + opts.noButton + '</a> &nbsp;' +
+            '<button data-value="1" data-fancybox-close class="btn btn-warning">' + opts.okButton + '</button>' +
+            '</p>' +
+            '</div>',
+          opts: {
+            animationDuration: 350,
+            animationEffect: 'material',
+            modal: true,
+            baseTpl: '<div class="fancybox-container fc-container" role="dialog" tabindex="-1">' +
+              '<div class="fancybox-bg"></div>' +
+              '<div class="fancybox-inner">' +
+              '<div class="fancybox-stage"></div>' +
+              '</div>' +
+              '</div>',
+            afterClose: function (instance, current, e) {
+              var button = e ? e.target || e.currentTarget : null;
+              var value = button ? $(button).data('value') : 0;
+
+              opts.callback(value);
+            }
+          }
+        });
+      }
+
+
+
       var uploader = new qq.FineUploader({
         element: document.getElementById("uploader"),
         debug: true,
@@ -122,7 +166,57 @@
             });
           }
         }
-      })
+      });
+
+
+
+      $(document).on('click','.media-library-delete',function(e){
+        e.preventDefault();
+
+        var src = $(this).data('src');
+
+        $.fancyConfirm({
+          title: "Please confirm delete",
+          message: "Are you sure you want to delete this file?",
+          okButton: 'Yes',
+          noButton: 'Cancel',
+          callback: function (value) {
+            if (value) {
+
+              $.post(src,{
+                '_token' : $('meta[name="csrf-token"]').attr('content')
+              },function(response){
+
+                $.get('{{url('admin/media/files')}}',function(response){
+                  $('.media-library').animate({
+                    'opacity':0
+                  },function(){
+                    $(this).empty();
+                    $(response).find('.media-library-boxes').appendTo('.media-library');
+                    $(this).animate({
+                      'opacity':1
+                    });
+                  });
+                  
+                });
+
+                $.fancybox.open({
+                  src  : '#animatedModal',
+                  type : 'inline',
+                  opts : {
+                    afterShow : function( instance, current ) {
+                      console.info( 'done!' );
+                    }
+                  }
+                });
+              });
+
+            } else {
+              $("#test_confirm_rez").html("Maybe later.");
+            }
+          }
+        }); 
+      });      
     });
   </script>
 @endsection
@@ -161,16 +255,18 @@
         <div class="box-body">
           <div class="media-library">
 
-            @foreach( $files as $file )
+            @forelse( $files as $file )
             <div class="media-library-boxes">
-              <a href="" class="media-library-close"  data-toggle="tooltip" title="Delete"><i class="fa fa-close"></i></a>
+              <a data-src="{{ url('admin/media/file/' .$file->id . '/delete') }}" href="#" class="media-library-delete media-library-close"  data-toggle="tooltip" title="Delete"><i class="fa fa-close"></i></a>
               <a data-fancybox data-type="ajax" data-modal="true" data-src="{{ url('admin/media/file/' . $file->id) }}" href="javascript:;" class="media-library-info"  data-toggle="tooltip" title="Details"><i class="fa fa-search"></i></a>
               <img src="{{$file->thumbnail}}" />
               <div class="media-library-description">
                 {{$file->name}}
               </div>
             </div><!-- .media-library-boxes -->
-            @endforeach
+            @empty
+            <p class="text-center">No files uploaded at the moment.</p>
+            @endforelse
           </div>
         </div>
       </div>
@@ -179,6 +275,18 @@
 
 
   </div>
+
+  <div style="display: none;" id="animatedModal" class="animated-modal text-center p-5">
+      <h2>Success!</h2>
+      <p>File successfully deleted.<br /></p>
+      <p class="mb-0">
+          <svg width="150" height="150" viewBox="0 0 510 510" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <path fill="#fff" d="M150.45,206.55l-35.7,35.7L229.5,357l255-255l-35.7-35.7L229.5,285.6L150.45,206.55z M459,255c0,112.2-91.8,204-204,204 S51,367.2,51,255S142.8,51,255,51c20.4,0,38.25,2.55,56.1,7.65l40.801-40.8C321.3,7.65,288.15,0,255,0C114.75,0,0,114.75,0,255 s114.75,255,255,255s255-114.75,255-255H459z"></path>
+          </svg>
+      </p>
+  </div>
+
+
 
 @endsection
 
