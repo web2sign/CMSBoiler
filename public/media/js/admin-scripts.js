@@ -19,6 +19,9 @@ window.uploadBtn = function(selector){
           "X-CSRF-Token": $("meta[name='csrf-token']").attr("content")
         }
       },
+      validation: {
+          allowedExtensions: ['jpeg', 'jpg', 'gif', 'png']
+      },
       callbacks: {
         onComplete: function(id, name, response) {
           if( response.success ) {
@@ -30,8 +33,6 @@ window.uploadBtn = function(selector){
             $.fancybox.close();
             $('.choose-image-btn').data('src', $('.choose-image-btn').data('url') + '?id=' + response.info.id );
           }
-          
-          
         }
       }
     });
