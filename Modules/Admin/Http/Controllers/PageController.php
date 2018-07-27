@@ -62,7 +62,7 @@ class PageController extends Controller
 
 
     /* 
-     * Set a defualt post type for page
+     * Set a default post type for page
      *
     **/
     public $post_type = "page";

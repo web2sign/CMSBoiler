@@ -1,5 +1,5 @@
 @extends('admin::layouts.master')
-@section('page_title', env('APP_NAME') . ' | Dashboard')
+@section('page_title', env('APP_NAME') . ' | Pages')
 @section('body_class', 'hold-transition skin-blue sidebar-mini')
 @section('styles')
   <link href="{{url('media/fine-uploader/fine-uploader-gallery.min.css')}}" rel="stylesheet" />

@@ -100,3 +100,12 @@ class Helper {
 
 
 }
+
+
+
+function usermeta($user_id, $metakey){
+  $user = \Modules\Admin\Entities\User::find($user_id);
+  if( !$user ){ return false; }
+
+  return $user->meta()->where('metakey',$metakey)->first() ? $user->meta()->where('metakey',$metakey)->first()->metavalue : false;
+}
