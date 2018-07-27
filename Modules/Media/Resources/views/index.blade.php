@@ -2,7 +2,6 @@
 @section('page_title', env('APP_NAME') . ' | Media Library')
 @section('body_class', 'hold-transition skin-blue sidebar-mini')
 @section('styles')
-  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <link href="{{url('media/fine-uploader/fine-uploader-gallery.min.css')}}" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url('media/plugins/iCheck/square/blue.css') }}" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
@@ -92,51 +91,6 @@
 
   <script>
     $(function () {
-
-      // Step 1: Create reusable jQuery plugin
-      // =====================================
-
-      $.fancyConfirm = function (opts) {
-        opts = $.extend(true, {
-          title: 'Are you sure?',
-          message: '',
-          okButton: 'OK',
-          noButton: 'Cancel',
-          callback: $.noop
-        }, opts || {});
-
-        $.fancybox.open({
-          type: 'html',
-          src: '<div class="fc-content p-5 rounded">' +
-            '<h2 class="mb-3">' + opts.title + '</h2>' +
-            '<p>' + opts.message + '</p>' +
-            '<p class="text-right">' +
-            '<a data-value="0" data-fancybox-close href="javascript:;" class="btn btn-lg btn-default">' + opts.noButton + '</a> &nbsp;' +
-            '<button data-value="1" data-fancybox-close class="btn btn-lg btn-warning">' + opts.okButton + '</button>' +
-            '</p>' +
-            '</div>',
-          opts: {
-            animationDuration: 350,
-            animationEffect: 'material',
-            modal: true,
-            baseTpl: '<div class="fancybox-container fc-container" role="dialog" tabindex="-1">' +
-              '<div class="fancybox-bg"></div>' +
-              '<div class="fancybox-inner">' +
-              '<div class="fancybox-stage"></div>' +
-              '</div>' +
-              '</div>',
-            afterClose: function (instance, current, e) {
-              var button = e ? e.target || e.currentTarget : null;
-              var value = button ? $(button).data('value') : 0;
-
-              opts.callback(value);
-            }
-          }
-        });
-      }
-
-
-
       var uploader = new qq.FineUploader({
         element: document.getElementById("uploader"),
         debug: true,
@@ -167,6 +121,7 @@
           }
         }
       });
+    
 
 
 
@@ -275,17 +230,6 @@
 
 
   </div>
-
-  <div style="display: none;" id="animatedModal" class="animated-modal text-center p-5">
-      <h2>Success!</h2>
-      <p>File successfully deleted.<br /></p>
-      <p class="mb-0">
-          <svg width="150" height="150" viewBox="0 0 510 510" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-              <path fill="#fff" d="M150.45,206.55l-35.7,35.7L229.5,357l255-255l-35.7-35.7L229.5,285.6L150.45,206.55z M459,255c0,112.2-91.8,204-204,204 S51,367.2,51,255S142.8,51,255,51c20.4,0,38.25,2.55,56.1,7.65l40.801-40.8C321.3,7.65,288.15,0,255,0C114.75,0,0,114.75,0,255 s114.75,255,255,255s255-114.75,255-255H459z"></path>
-          </svg>
-      </p>
-  </div>
-
 
 
 @endsection

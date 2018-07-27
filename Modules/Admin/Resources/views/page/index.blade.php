@@ -2,11 +2,29 @@
 @section('page_title', env('APP_NAME') . ' | Dashboard')
 @section('body_class', 'hold-transition skin-blue sidebar-mini')
 @section('styles')
+  <link href="{{url('media/fine-uploader/fine-uploader-gallery.min.css')}}" rel="stylesheet" />
   <link rel="stylesheet" href="{{ url('media/plugins/iCheck/square/blue.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
 @endsection
 @section('scripts')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
   <script src="{{url('media/plugins/iCheck/icheck.min.js')}}"></script>
   <script src="{{url('media/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
+  <script src="{{url('media/fine-uploader/fine-uploader.min.js')}}"></script>
+  <script type="text/template" id="qq-template">
+    <div class="qq-uploader-selector qq-uploader qq-gallery" qq-drop-area-text="Drop files here">
+      <div class="qq-total-progress-bar-container-selector qq-total-progress-bar-container">
+          <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-total-progress-bar-selector qq-progress-bar qq-total-progress-bar"></div>
+      </div>
+      <div class="qq-upload-drop-area-selector qq-upload-drop-area" qq-hide-dropzone>
+          <span class="qq-upload-drop-area-text-selector"></span>
+      </div>
+      <div class="qq-upload-button-selector qq-upload-button">
+          <div>Upload a file</div>
+      </div>
+    </div>
+  </script>
+
 @endsection
 
 @section('body')
@@ -25,6 +43,9 @@
 
     
     <section class="content">
+      
+      {!!session()->has('success') ? '<div class="callout callout-success"><h4><i class="icon fa fa-check"></i> Success</h4><p>'. session()->get('success') .'</p></div>' : ''!!}
+
       <div class="row">
         <div class="col-xs-12">
           <div class="box">
@@ -53,7 +74,7 @@
                   <th width="100">Status</th>
                   <th colspan="2">Action</th>
                 </tr>
-                @foreach($pages as $page)
+                @forelse($pages as $page)
                 <tr>
                   <td>{{ $page->id }}</td>
                   <td>{!! ( $page->parent_id != 0 ? '&mdash; ' : '' ) . $page->title !!}</td>
@@ -64,10 +85,14 @@
                     @else
                     <span class="label label-warning">Draft</span></td>
                     @endif
-                  <td width="30"><a href="{{ url('admin/page/' . $page->id . '/update') }}"><i class="fa fa-edit"></i></a></td>
-                  <td width="30"><a href="{{ url('admin/page/' . $page->id . '/delete') }}"><i class="fa fa-trash"></i></a></td>
+                  <td width="30"><a data-toggle="tooltip" title="Edit" href="{{ url('admin/page/' . $page->id . '/update') }}"><i class="fa fa-edit"></i></a></td>
+                  <td width="30"><a data-toggle="tooltip" title="Delete" data-href="{{ url('admin/page/' . $page->id . '/delete') }}" data-delete-item="" href="#"><i class="fa fa-trash"></i></a></td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                  <td colspan="6"><a href="{{ url('admin/page/create') }}">Create a page here</a></td>
+                </tr>
+                @endforelse
               </table>
             </div>
             <!-- /.box-body -->

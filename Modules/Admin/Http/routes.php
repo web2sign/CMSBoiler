@@ -53,7 +53,7 @@ Route::group([
     ]);
 
     Route::post('page/{id}/delete', [
-      'uses' => 'PageController@delete',
+      'uses' => 'PageController@destroy',
       'as' => 'module.admin.page.delete'
     ]);
   }

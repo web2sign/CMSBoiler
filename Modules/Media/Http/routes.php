@@ -23,6 +23,11 @@ Route::group([
       'as' => 'module.admin.media.read'
     ]);
 
+    Route::get('media/choose', [
+      'uses' => 'MediaController@choices',
+      'as' => 'module.admin.media.read'
+    ]);
+
     Route::post('media/file/{id}/delete', [
       'uses' => 'MediaController@destroy',
       'as' => 'module.admin.media.delete'

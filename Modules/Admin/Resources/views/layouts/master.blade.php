@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
   <title>@yield('page_title')</title>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
   @yield('styles')
@@ -13,6 +14,9 @@
   <link rel="stylesheet" href="{{url('media/css/AdminLTE.min.css')}}" />
   <link rel="stylesheet" href="{{url('media/css/skins/_all-skins.min.css')}}" />
   <link rel="stylesheet" href="{{url('media/css/styles.css')}}" />
+  <script type="text/javascript">
+    var site_url = "{{ url('/') }}";
+  </script>
   <!--[if lt IE 9]><script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script><script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
 </head>
 <body class="@yield('body_class')">
@@ -22,8 +26,8 @@
 
   <header class="main-header">
     <a href="{{ url('admin') }}" class="logo">
-      <span class="logo-mini"><b>C</b>C</span>
-      <span class="logo-lg"><b>CMS</b>Cyfervoid</span>
+      <span class="logo-mini"><b>C</b>B</span>
+      <span class="logo-lg"><b>CMS</b>Boiler</span>
     </a>
 
     <nav class="navbar navbar-static-top" role="navigation">
@@ -372,10 +376,21 @@
   <div class="control-sidebar-bg"></div>
 </div>
 
+<div style="display: none;" id="animatedModal" class="animated-modal text-center p-5">
+    <h2>Success!</h2>
+    <p>File successfully deleted.</p>
+    <br>
+    <p class="mb-0">
+        <svg width="150" height="150" viewBox="0 0 510 510" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <path fill="#fff" d="M150.45,206.55l-35.7,35.7L229.5,357l255-255l-35.7-35.7L229.5,285.6L150.45,206.55z M459,255c0,112.2-91.8,204-204,204 S51,367.2,51,255S142.8,51,255,51c20.4,0,38.25,2.55,56.1,7.65l40.801-40.8C321.3,7.65,288.15,0,255,0C114.75,0,0,114.75,0,255 s114.75,255,255,255s255-114.75,255-255H459z"></path>
+        </svg>
+    </p>
+</div>
 
 <script src="{{url('media/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{url('media/plugins/jQuery/jquery-2.2.3.min.js')}}"></script>
 <script src="{{url('media/js/bootstrap.min.js')}}"></script>@yield('scripts')  
 <script src="{{url('media/js/app.min.js')}}"></script>
+<script src="{{url('media/js/admin-scripts.js')}}"></script>
 </body>
 </html>

@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Modules\Admin\Http\Requests\Page as FormRequest;
 use Hooks,DB;
 
+use Modules\Admin\Entities\Pagemeta;
+
 use Modules\Admin\Entities\Page;
 
 class PageController extends Controller
@@ -73,7 +75,8 @@ class PageController extends Controller
         CASE 
         WHEN parent_id = 0 THEN id
         ELSE parent_id
-        END ASC
+        END DESC,
+        id ASC
       ");
       
       if($search) {
@@ -100,7 +103,9 @@ class PageController extends Controller
      */
     public function create()
     {
-      $parents = Page::select(['id','title'])->where('parent_id', 0);
+
+      $parents = Page::select(['id','title'])
+                      ->where('parent_id', 0);
       return view('admin::page.create',[
         'parents' => $parents->get()
       ]);
@@ -113,8 +118,27 @@ class PageController extends Controller
      */
     public function store(FormRequest $request)
     {
+
+
       $page = Page::create($request->all());
-      return redirect()->to('admin/page/' . $page->id . '/update')->with('status', 'Page has been successfully created!')->send();
+      if($meta = $request->get('meta')) {
+        foreach ($meta as $key => $value) {
+          $page->meta()->saveMany([
+            new Pagemeta([
+              'metakey' => $key,
+              'metavalue' => $value
+            ]),
+          ]);
+        }
+      }
+
+
+      $message = ($request->get('status') == 1) ? ucfirst($this->post_type) . ' successfully published!' : ucfirst($this->post_type) . ' successfully saved as draft.';
+
+      return redirect()->
+             to('admin/pages')->
+             withSuccess($message)->
+             send();
       
     }
 
@@ -133,14 +157,26 @@ class PageController extends Controller
      */
     public function edit($id)
     {
-      $parents = Page::select(['id','title'])->where('parent_id', 0);
+      $parents = Page::select(['id','title'])->where('parent_id', 0)->where('id','<>',$id);
 
-      $page = Page::with('parent')->find($id);
+      $page = Page::with(['parent','meta'])->find($id);
+      $meta = [];
 
-      return view('admin::page.update',[
+      $page->meta()->get()->map(function($q) use(&$meta){
+        $meta[$q->metakey] = $q->metavalue;
+      });
+
+      $data = [
         'parents' => $parents->get(),
-        'page' => $page
-      ]);
+        'page' => $page,
+        'meta' => $meta
+      ];
+
+      foreach($page->meta as $key => $value) {
+        $data[$key] = $value;
+      }
+
+      return view('admin::page.update',$data);
     }
 
     /**
@@ -148,33 +184,60 @@ class PageController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update($id, Request $request)
+    public function update($id, FormRequest $request)
     {
       $parents = Page::select(['id','title'])->where('parent_id', 0);
 
       $page = Page::with('parent')->find($id);
+      $page->update($request->all());
+      if($meta = $request->get('meta')) {
+        foreach ($meta as $key => $value) {
 
-      return view('admin::page.update',[
-        'parents' => $parents->get(),
-        'page' => $page
-      ]);
+          if( $page->meta()->where('metakey', $key)->count() ) {
+            $page->meta()->where('metakey', $key)->update([
+              'metavalue' => $value
+            ]);
+          } else {
+            $page->meta()->saveMany([
+              new Pagemeta([
+                'metakey' => $key,
+                'metavalue' => $value
+              ]),
+            ]);            
+          }
+
+        }
+      }
+
+
+      $message = ($request->get('status') == 1) ? ucfirst($this->post_type) . ' successfully published!' : ucfirst($this->post_type) . ' successfully saved as draft.';
+
+      return redirect()->
+             to('admin/pages')->
+             withSuccess($message)->
+             send();
+      
     }
 
-
-    /**
-     * Delete the specified resource in storage.
-     * @param  Request $request
-     * @return Response
-     */
-    public function delete(Request $request)
-    {
-    }
 
     /**
      * Remove the specified resource from storage.
      * @return Response
      */
-    public function destroy()
+    public function destroy($id)
     {
+      $page = Page::find($id);
+      if(!$page) {
+        return redirect()->to('admin/pages')->withErrors(['msg','Something went wrong.']);
+      }
+
+      $page->children()->get()->map(function($q){
+        $q->update(['parent_id'=>0]);
+        return $q;
+      });
+
+      $page->delete();
+
+      return redirect()->to('admin/pages')->withSuccess('Page successfully deleted.');
     }
 }

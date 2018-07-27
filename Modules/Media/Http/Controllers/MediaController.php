@@ -23,6 +23,25 @@ class MediaController extends Controller
     ]);
   }
 
+  public function choices() {
+    $id = request('id', 0);
+    $media = Media::where("file_type","ilike","%image%");
+    $media = $media->orderByRaw("
+        CASE 
+        WHEN id = $id THEN 0
+        ELSE 1
+        END ASC
+      ");
+    $media = $media->get()->map(function($q) use($id){
+                    $q->setAttribute('selected',($q->id == $id));
+                    $q->setAttribute('thumbnail', url('media/thumbnail/'.$q->id.'?w=150&h=150'));
+                    return $q;
+                  });
+    return view('media::choices',[
+      'images' => $media
+    ]);
+  }
+
 
 
     /**
@@ -44,6 +63,8 @@ class MediaController extends Controller
 
 
       $pagination = $media->paginate(50);
+
+
 
       return view('media::index',[
         'files' => $media->get()->map(function($q){
@@ -102,7 +123,7 @@ class MediaController extends Controller
 
 
 
-      Media::create([
+      $media = Media::create([
         'file_type' => $file->getMimeType(),
         'name' => $file_name,
         'path' => $destiny . $file_name
@@ -113,7 +134,8 @@ class MediaController extends Controller
       return [
         'success' => true,
         'info' => [
-          'file_name' => $file_name
+          'file_name' => $file_name,
+          'id'=> $media->id
         ]
       ];
 

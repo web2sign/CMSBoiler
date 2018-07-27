@@ -101,6 +101,30 @@ a.media-library-info:hover {
   text-overflow: ellipsis;
 }
 
+.blk{display:block;}
+
+span.featured-image.active { cursor:pointer; position:relative; display:inline-block; }
+span.featured-image.active:after { content:"\f00d"; background:rgba(0,0,0,0.5); position: absolute;top:0px; left:0px; bottom:0px; right:0px; 
+display: inline-block;
+font: normal normal normal 40px FontAwesome;
+font-size: inherit;
+text-rendering: auto;
+-webkit-font-smoothing: antialiased;
+color:#FFFFFF;
+font-size:50px;
+text-align:center;padding-top:calc(50% - 25px);
+opacity:0;
+transition:opacity 300ms ease;
+}
+span.featured-image.active:hover:after {
+  opacity:1;
+}
+
+.box-body-image-choices { margin:0px -10px; }
+.box-body-image-choices .thumbnail { margin:0 10px; }
+.thumbnail.selected {
+  box-shadow:0px 0px 10px rgba(0,100,255,0.5)
+}
 
 
    /*
@@ -157,3 +181,6 @@ a.media-library-info:hover {
     .fancybox-slide--current .animated-modal p:first-of-type {
         transition-delay: .2s;
     }
+
+
+.modal-dialog.fancybox-content { padding:0px; }

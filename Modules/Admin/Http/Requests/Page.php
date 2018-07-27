@@ -13,10 +13,11 @@ class Page extends FormRequest
      */
     public function rules()
     {
+      //dd(request('id',NULL));
         return [
           'title' => 'required|min:6',
           'content' => 'required|min:10',
-          'slug' => 'required|unique:pages,slug,NULL,id,post_type,'.$this->__post_type,
+          'slug' => (request('id') ? 'required|unique:pages,slug,'.request('id').',id,post_type,'.$this->__post_type : 'required|unique:pages,slug,NULL,id,post_type,'.$this->__post_type ),
           'featured_image' => 'nullable|image'
         ];
     }
