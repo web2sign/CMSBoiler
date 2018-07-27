@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Http\Requests\Page as FormRequest;
-use Hooks,DB;
+use DB;
 
 use Modules\Admin\Entities\Pagemeta;
 
@@ -22,7 +22,7 @@ class PageController extends Controller
      * @return Response
      */
     public function hook(){
-      Hooks::add('dashboard',function(){
+      \Hooks::add('dashboard',function(){
       $active_pages = Page::where('status',true)->count();
       $html = '
       <div class="col-lg-4">
@@ -43,6 +43,21 @@ class PageController extends Controller
 
         return $html;
       }, 10);
+
+      \Hooks::add('admin_menu',function(){
+        if( \Helper::hasAccess('module.admin.page.read') ) {
+
+          $html = '<li class="treeview '.(\Request::is('admin/pages') || \Request::is('admin/pages/*')  || \Request::is('admin/page/*') ? ' active' : '') .'"><a href="#"><i class="fa fa-book"></i> <span>Manage Pages</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          </a>
+            <ul class="treeview-menu">
+              <li'. (\Request::is('admin/pages') || \Request::is('admin/pages/*') ? ' class="active"' : '') .'><a href="'.url('admin/pages').'"><i class="fa fa-circle-o"></i> View Pages</a></li>
+              '. ( \Helper::hasAccess('module.admin.page.create') ? '<li'. (\Request::is('admin/page/create') ? ' class="active"' : '') .'><a href="'.url('admin/page/create').'"><i class="fa fa-circle-o"></i> Create Pages</a></li>' : '' ) .'
+            </ul>
+          </li>';
+        }
+        return isset($html) ? $html : '';
+      }, 21);
+
     }
 
 

@@ -49,9 +49,11 @@ class Helper {
   }
 
 
-  public static function hasAccess(){
+  public static function hasAccess($current_route=false){
     $user = self::$user;
-    $current_route = Request::route()->getName();
+    if(!$current_route) {
+      $current_route = Request::route()->getName();
+    }
     $module = explode(".", $current_route);
     
     // if route is not module
@@ -95,5 +97,6 @@ class Helper {
 
     return false;
   }
+
 
 }

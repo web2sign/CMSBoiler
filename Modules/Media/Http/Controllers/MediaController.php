@@ -12,6 +12,21 @@ use Modules\Media\Entities\Media;
 class MediaController extends Controller
 {
 
+
+  public function hook(){
+    \Hooks::add('admin_menu',function(){
+    
+      if( \Helper::hasAccess('module.admin.media.read') ) {
+        $html = '<li '.(\Request::is('admin/media/files') ? ' class="active"' : '') .'><a href="'.url('admin/media/files').'"><i class="fa fa-file"></i> <span>Media Library</span></a></li>';
+      }
+
+      return $html;
+
+    }, 10);
+
+
+  }
+
   public function info($id) {
     $media = Media::find($id);
     $url = str_replace( public_path(), '', $media->path);

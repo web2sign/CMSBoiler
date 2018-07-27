@@ -33,7 +33,9 @@
     <section class="content-header">
       <h1>
         Pages
+        @if( Helper::hasAccess('module.admin.page.create') )
         <a class="btn btn-success btn-header" href="{{ url('admin/page/create') }}">Create page</a>
+        @endif
       </h1>
       <ol class="breadcrumb">
         <li><a href="{{ url('admin/dashboard') }}"><i class="fa fa-dashboard"></i> Dashboard</a></li>
