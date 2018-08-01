@@ -25,6 +25,7 @@
     <a href="{{ url('/') }}"><strong>Control Panel</strong></a>
   </div>
 @if ($errors->any())
+
   <ul class="callout callout-danger" style="padding-left:30px"> 
 @foreach ( $errors->all() as $error)
   <li>{{ $error }}</li>

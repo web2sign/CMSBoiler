@@ -36,13 +36,12 @@ class LoginController extends Controller
      */
     public function postLogin(FormRequest $request)
     {
-      //dd( $request->all() );
-      $request->session()->put(['session_key'=>$request->get('session_key')]);
+      request()->session()->put(['session_key'=>request()->get('session_key')]);
 
       /* create session key */
-      $user = $request->user;
+      $user = request()->get('user');
       $user->sessions()->create([
-        'session_key' => $request->get('session_key'),
+        'session_key' => request()->get('session_key'),
         'session_type' => 'admin',
         'ip' => $request->ip(),
         'expired_at' => Carbon::now()->addDays(3)

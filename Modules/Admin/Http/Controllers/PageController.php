@@ -68,6 +68,11 @@ class PageController extends Controller
     public $post_type = "page";
 
     public function __construct(Request $request) {
+      
+      if( !method_exists($request->route, 'getAction') ) {
+        return false;
+      }
+
       $action = $request->route()->getAction();
       $post_type = isset($action['post_type']) ? $action['post_type'] : 'page';
       $this->post_type = $post_type;

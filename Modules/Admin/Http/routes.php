@@ -62,7 +62,7 @@ Route::group([
 
 
 Route::group([
-  'middleware' => 'web', 
+  'middleware' => ['web'], 
   'prefix' => 'admin', 
   'namespace' => 'Modules\Admin\Http\Controllers'], 
   function() {
