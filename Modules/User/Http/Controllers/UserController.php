@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Entities\User;
-
+use Modules\Admin\Entities\Group;
+use Modules\Admin\Entities\Usermeta;
+use Modules\Admin\Entities\Upermit;
+use Modules\User\Http\Requests\User as UserRequest;
+use DB;
 class UserController extends Controller
 {
   public function hook(){
@@ -38,18 +42,29 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-
+      //$user = User::find(4)->groups()->sync([3]);
+      //die();
+      //$user = User::with(['groups','permits','meta'])->find(1);
+      //dd($user->toArray());
+      
       $limit = $request->get('limit', env('LIMIT'));
       $search = $request->get('s');
       $sort = $request->get('sort');
-      $by = $request->get('by');
+      $group = $request->get('group');
       //dd( Page::paginate(1) );
-      $users = User::orderByRaw("b.id,users.id ASC")->select([
-        'users.*'
-      ])
-      ->leftJoin('user_group as a','a.user_id','=','users.id')
-      ->leftJoin('groups as b','b.id','=','a.group_id');
 
+      $custom_sort = ($sort && in_array($sort,['desc','asc'])) ? "gid ASC, uid $sort" : "gid ASC, uid ASC";
+
+      $users = User::select(['users.id as uid', 'users.*','b.id as gid','b.name as gname'])
+      ->orderByRaw($custom_sort)
+      ->join('user_group as a', function($q){
+        $q->on('a.user_id','=','users.id');
+        $q->orderBy('a.id','asc');
+        $q->groupBy('a.user_id');
+      })
+      ->join('groups as b',function($q){
+        $q->on('b.id','=','a.group_id');
+      });
 
       if($search) {
         $users = $users->where(function($q) use($search){
@@ -58,7 +73,14 @@ class UserController extends Controller
         });
       }
 
+      if($group) {
+        $users = $users->where('b.id',$group);
+      }
+
+
+
       $pagination = $users->paginate($limit);
+      //dd($users->get()->toArray());
 
       return view('user::index',[
         'users' => $users->get()->map(function($q){
@@ -79,9 +101,19 @@ class UserController extends Controller
     public function create()
     {
 
+      $modules = \Helper::getModules();
+      $groups = Group::get()->map(function($q){
+
+        $q->setAttribute('active',$q->id  == old('groups',0));
+        return $q;
+      });
+
 
       
-        return view('user::create');
+      return view('user::create',[
+        'modules' => $modules,
+        'groups' => $groups
+      ]);
     }
 
     /**
@@ -89,8 +121,84 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function store(Request $request)
+    //public function store()
+    public function store(UserRequest $request)
     {
+
+      //$user = User::find(4);
+      //$user = $user->groups()->sync([1]);
+      //die();
+
+
+      $user = User::create([
+        'email'=>request()->get('email'),
+        'username'=>request()->get('username'),
+        'password'=>bcrypt(request()->get('password'))
+      ]);
+      $user->groups()->sync([request()->get('groups')]);
+
+      if($meta = request()->get('meta')) {
+        foreach ($meta as $key => $value) {
+
+          if( $user->meta()->where('metakey', $key)->count() ) {
+            $user->meta()->where('metakey', $key)->update([
+              'metavalue' => $value
+            ]);
+          } else {
+            $user->meta()->saveMany([
+              new Usermeta([
+                'metakey' => $key,
+                'metavalue' => $value
+              ]),
+            ]);            
+          }
+
+        }
+      }
+
+
+      $custom_permits = [];
+      foreach( request()->get('permits') as $module => $methods){
+        $default_methods = [
+          'read' => 0,
+          'create' => 0,
+          'update' => 0,
+          'delete' => 0
+        ];
+
+        foreach($methods as $method) {
+          $default_methods[$method] = 1;
+        }
+
+        if( $user->permits()->where('module', $module)->count() ) {
+          $user->permits()->where('module', $module)->update([
+            'create' => $default_methods['create'],
+            'read' => $default_methods['read'],
+            'update' => $default_methods['update'],
+            'delete' => $default_methods['delete']
+          ]);
+        } else {
+          $custom_permits[] = new UPermit([
+            'module' => $module,
+            'create' => $default_methods['create'],
+            'read' => $default_methods['read'],
+            'update' => $default_methods['update'],
+            'delete' => $default_methods['delete']
+          ]);
+        }
+
+      }
+
+      if( count($custom_permits) ) {
+        $user->permits()->saveMany($custom_permits);
+      }
+
+      return redirect()->
+             to('admin/users?sort=desc&group='.$user->groups()->first()->id)->
+             withSuccess('User has been successfully created!')->
+             send();
+
+
     }
 
     /**

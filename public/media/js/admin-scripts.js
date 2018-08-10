@@ -91,6 +91,39 @@ $.fancyConfirm = function (opts) {
 
 var admin = {
 
+  permission: function(){
+    if( $('[data-required-toggle]').length < 1 ) {
+      return false;
+    }
+
+
+    $('[data-required-toggle]').each(function(i,o){
+      $(o).on('change', function(e){
+        e.preventDefault();
+        var _required = $(o).data('required-toggle');
+        var _value = $(o).val();
+
+        if( _required != '' ) {
+
+          $('input[value='+ _required +']', $(o).parents('.permit-tr')).each(function(ii,oo){
+            $(oo).prop('checked',true);
+          });
+
+        }
+
+          
+        $('input[data-required-toggle='+ _value +']', $(o).parents('.permit-tr')).each(function(ii,oo){
+          if( $(oo).prop('checked') ){
+            $(oo).prop('checked',false);
+          }
+        });
+
+
+      });
+    });
+
+  },
+
   popupDelete: function(){
 
   },
@@ -128,6 +161,7 @@ var admin = {
 
   init: function(){
     this.bind();
+    this.permission();
   }
 
 }.init();

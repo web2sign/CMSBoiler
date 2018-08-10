@@ -37,7 +37,6 @@ class CreateSiteTables extends Migration
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-
         Schema::create('user_group', function (Blueprint $table) {
           $table->increments('id');
           $table->integer('user_id')->unsigned()->index();
@@ -45,7 +44,6 @@ class CreateSiteTables extends Migration
           $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
           $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
-
 
         Schema::create('user_permits', function (Blueprint $table) {
           $table->increments('id');
@@ -56,7 +54,6 @@ class CreateSiteTables extends Migration
           $table->integer('update')->default(0);
           $table->integer('delete')->default(0);
         });
-
 
         Schema::create('user_sessions', function (Blueprint $table) {
           $table->increments('id');

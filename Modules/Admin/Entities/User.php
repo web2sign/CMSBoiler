@@ -12,7 +12,7 @@ class User extends Model
 
 
   public function groups() {
-    return $this->belongsToMany(Group::class,'user_group','group_id','user_id');
+    return $this->belongsToMany(Group::class,'user_group','user_id','group_id');
   }
 
   public function meta() {
