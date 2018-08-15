@@ -214,9 +214,26 @@ class UserController extends Controller
      * Show the form for editing the specified resource.
      * @return Response
      */
-    public function edit()
+    public function edit($id)
     {
-        return view('user::edit');
+
+      $user = User::find($id);
+      $group_id = $user->groups()->first()->id;
+      
+      $modules = \Helper::getModules();
+      $groups = Group::get()->map(function($q) use($group_id){
+        $q->setAttribute('active',$q->id  == old('groups',$group_id));
+        return $q;
+      });
+ 
+
+      
+      return view('user::update',[
+        'modules' => $modules,
+        'groups' => $groups,
+        'user' => $user
+      ]);
+
     }
 
     /**
