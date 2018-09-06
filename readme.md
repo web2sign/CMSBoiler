@@ -1,6 +1,6 @@
 ## About CMSBoiler
 
-CMSBoiler is inspired of Wordpress CMS though it's created using laravel. This is intended for rapid development of website base on Laravel.
+CMSBoiler is inspired of Wordpress CMS though it's created using laravel. This is intended for my rapid development of website base on Laravel.
 
 CMSBoiler is integrated with AdminLTE to be its default theme in Admin Panel.
 
