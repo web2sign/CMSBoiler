@@ -40,7 +40,7 @@ class MediaController extends Controller
 
   public function choices() {
     $id = request('id', 0);
-    $media = Media::where("file_type","ilike","%image%");
+    $media = Media::where("file_type","like","%image%");
     $media = $media->orderByRaw("
         CASE 
         WHEN id = $id THEN 0

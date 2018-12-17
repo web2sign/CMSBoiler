@@ -89,6 +89,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 1',
       'keywords' => 'Keywords Page 1',
       'content' => 'Page Content 1',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
     Page::create([
@@ -98,6 +102,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 2',
       'keywords' => 'Keywords Page 2',
       'content' => 'Page Content 2',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
     Page::create([
@@ -108,6 +116,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 3',
       'keywords' => 'Keywords Page 3',
       'content' => 'Page Content 3',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
     Page::create([
@@ -118,6 +130,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 4',
       'keywords' => 'Keywords Page 4',
       'content' => 'Page Content 4',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
     Page::create([
@@ -128,6 +144,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 5',
       'keywords' => 'Keywords Page 5',
       'content' => 'Page Content 5',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
     Page::create([
@@ -138,6 +158,10 @@ class AdminDatabaseSeeder extends Seeder
       'description' => 'Description Page 6',
       'keywords' => 'Keywords Page 6',
       'content' => 'Page Content 6',
+    ])->meta()->saveMany([
+      new Pagemeta(['metakey' => 'keywords','metavalue' => '']),
+      new Pagemeta(['metakey' => 'description','metavalue' => '']),
+      new Pagemeta(['metakey' => 'featured_image','metavalue' => ''])
     ]);
 
   }

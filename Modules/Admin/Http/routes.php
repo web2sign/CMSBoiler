@@ -15,7 +15,6 @@ Route::group([
       'as' => 'module.admin.dashboard.read'
     ]);
     
-
     Route::get('pages', [
       'uses' => 'PageController@index',
       'as' => 'module.admin.page.read',

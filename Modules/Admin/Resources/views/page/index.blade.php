@@ -34,7 +34,7 @@
       <h1>
         Pages
         @if( Helper::hasAccess('module.admin.page.create') )
-        <a class="btn btn-success btn-header" href="{{ url('admin/page/create') }}">Create page</a>
+        <a class="btn btn-success btn-header" href="{{ url('admin/' .$post_type. '/create') }}">Create {{$post_type}}</a>
         @endif
       </h1>
       <ol class="breadcrumb">
@@ -87,12 +87,12 @@
                     @else
                     <span class="label label-warning">Draft</span></td>
                     @endif
-                  <td width="30"><a data-toggle="tooltip" title="Edit" href="{{ url('admin/page/' . $page->id . '/update') }}"><i class="fa fa-edit"></i></a></td>
-                  <td width="30"><a data-toggle="tooltip" title="Delete" data-href="{{ url('admin/page/' . $page->id . '/delete') }}" data-delete-item="" href="#"><i class="fa fa-trash"></i></a></td>
+                  <td width="30"><a data-toggle="tooltip" title="Edit" href="{{ url('admin/' .$post_type. '/' . $page->id . '/update') }}"><i class="fa fa-edit"></i></a></td>
+                  <td width="30"><a data-toggle="tooltip" title="Delete" data-href="{{ url('admin/' .$post_type. '/' . $page->id . '/delete') }}" data-delete-item="" href="#"><i class="fa fa-trash"></i></a></td>
                 </tr>
                 @empty
                 <tr>
-                  <td colspan="6"><a href="{{ url('admin/page/create') }}">Create a page here</a></td>
+                  <td colspan="6"><a href="{{ url('admin/' .$post_type. '/create') }}">Create a {{$post_type}} here</a></td>
                 </tr>
                 @endforelse
               </table>

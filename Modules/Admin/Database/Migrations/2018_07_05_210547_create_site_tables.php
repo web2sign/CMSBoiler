@@ -109,6 +109,7 @@ class CreateSiteTables extends Migration
     public function down() {
       Schema::dropIfExists('pagemeta');
       Schema::dropIfExists('pages');
+      Schema::dropIfExists('user_codes');
       Schema::dropIfExists('user_sessions');
       Schema::dropIfExists('user_permits');
       Schema::dropIfExists('user_group');

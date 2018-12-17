@@ -1,6 +1,5 @@
 <?php
-
-use Modules\Admin\Entities\Usession, Carbon\Carbon, Request, Route;
+use Modules\Admin\Entities\Usession, Carbon\Carbon;
 
 class Hooks {
   public static $actions = [];
@@ -52,7 +51,7 @@ class Helper {
   public static function hasAccess($current_route=false){
     $user = self::$user;
     if(!$current_route) {
-      $current_route = Request::route()->getName();
+      $current_route = \Request::route()->getName();
     }
     $module = explode(".", $current_route);
     

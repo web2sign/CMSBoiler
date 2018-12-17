@@ -69,9 +69,9 @@ class PageController extends Controller
 
     public function __construct(Request $request) {
       
-      if( !method_exists($request->route, 'getAction') ) {
+      /*if( !method_exists($request->route, 'getAction') ) {
         return false;
-      }
+      }*/
 
       $action = $request->route()->getAction();
       $post_type = isset($action['post_type']) ? $action['post_type'] : 'page';
@@ -90,8 +90,8 @@ class PageController extends Controller
       $search = $request->get('s');
       $sort = $request->get('sort');
       $by = $request->get('by');
-      //dd( Page::paginate(1) );
-      $pages = Page::orderByRaw("
+      
+      $pages = Page::where('post_type',$this->post_type)->orderByRaw("
         CASE 
         WHEN parent_id = 0 THEN id
         ELSE parent_id
@@ -101,8 +101,8 @@ class PageController extends Controller
       
       if($search) {
         $pages = $pages->where(function($q) use($search){
-          $q->where( 'title', 'ilike', "%$search%" );
-          $q->orWhere('content', 'ilike', "%$search%" );
+          $q->where( 'title', 'like', "%$search%" );
+          $q->orWhere('content', 'like', "%$search%" );
         });
       }
 

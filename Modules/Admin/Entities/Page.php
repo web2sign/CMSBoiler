@@ -13,8 +13,6 @@ class Page extends Model
     return $this->hasMany(Pagemeta::class,'page_id','id');
   }
 
-
-
   public function parent(){
     return $this->hasOne(Page::class,'id', 'parent_id');
   }
