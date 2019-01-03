@@ -11,7 +11,7 @@ use Modules\Admin\Entities\Usermeta;
 use Modules\Admin\Entities\Upermit;
 use Modules\User\Http\Requests\User as UserRequest;
 use DB;
-class UserController extends Controller
+class UserAdminController extends Controller
 {
   public function hook(){
     \Hooks::add('admin_menu',function(){
@@ -82,7 +82,7 @@ class UserController extends Controller
       $pagination = $users->paginate($limit);
       //dd($users->get()->toArray());
 
-      return view('user::index',[
+      return view('user::admin.index',[
         'users' => $users->get()->map(function($q){
           $q->meta()->get()->map(function($qq) use(&$q){
             $q->setAttribute($qq->metakey,$qq->metavalue);
@@ -110,7 +110,7 @@ class UserController extends Controller
 
 
       
-      return view('user::create',[
+      return view('user::admin.create',[
         'modules' => $modules,
         'groups' => $groups
       ]);
@@ -207,7 +207,7 @@ class UserController extends Controller
      */
     public function show()
     {
-        return view('user::show');
+        return view('user::admin.show');
     }
 
     /**
@@ -226,12 +226,18 @@ class UserController extends Controller
         return $q;
       });
  
+      $meta=[];
+      $user->meta()->get()->map(function($q) use(&$meta){
+        $meta[$q->metakey]=$q->metavalue;
+        return $q;
+      });
 
       
-      return view('user::update',[
+      return view('user::admin.update',[
         'modules' => $modules,
         'groups' => $groups,
-        'user' => $user
+        'user' => $user,
+        'meta' => $meta
       ]);
 
     }
@@ -241,15 +247,94 @@ class UserController extends Controller
      * @param  Request $request
      * @return Response
      */
-    public function update(Request $request)
+    public function update($id, UserRequest $request)
     {
+      $user = User::find($id);
+      $user->update([
+        'email'=>request()->get('email'),
+      ]);
+
+      $user->groups()->sync([request()->get('groups')]);
+
+      if($meta = request()->get('meta')) {
+        foreach ($meta as $key => $value) {
+
+          if( $user->meta()->where('metakey', $key)->count() ) {
+            $user->meta()->where('metakey', $key)->update([
+              'metavalue' => $value
+            ]);
+          } else {
+            $user->meta()->saveMany([
+              new Usermeta([
+                'metakey' => $key,
+                'metavalue' => $value
+              ]),
+            ]);            
+          }
+
+        }
+      }
+
+
+      $custom_permits = [];
+      if( request()->get('permits') ) {
+          
+        foreach( request()->get('permits') as $module => $methods){
+          $default_methods = [
+            'read' => 0,
+            'create' => 0,
+            'update' => 0,
+            'delete' => 0
+          ];
+
+          foreach($methods as $method) {
+            $default_methods[$method] = 1;
+          }
+
+          if( $user->permits()->where('module', $module)->count() ) {
+            $user->permits()->where('module', $module)->update([
+              'create' => $default_methods['create'],
+              'read' => $default_methods['read'],
+              'update' => $default_methods['update'],
+              'delete' => $default_methods['delete']
+            ]);
+          } else {
+            $custom_permits[] = new UPermit([
+              'module' => $module,
+              'create' => $default_methods['create'],
+              'read' => $default_methods['read'],
+              'update' => $default_methods['update'],
+              'delete' => $default_methods['delete']
+            ]);
+          }
+
+        }
+      }
+
+      if( count($custom_permits) ) {
+        $user->permits()->delete();
+        $user->permits()->saveMany($custom_permits);
+      }
+
+      return redirect()->
+             to('admin/users?sort=desc&group='.$user->groups()->first()->id)->
+             withSuccess('User has been successfully update!')->
+             send();
+
+
     }
 
     /**
      * Remove the specified resource from storage.
      * @return Response
      */
-    public function destroy()
+    public function destroy($id)
     {
+      $user = User::find($id);
+      if(!$user) {
+        return redirect()->to('admin/users')->withErrors(['msg','Something went wrong.']);
+      }
+      $user->delete();
+      return redirect()->to('admin/users')->withSuccess('User successfully deleted.');
     }
 }

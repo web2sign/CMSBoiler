@@ -1,17 +1,17 @@
 <?php
 
-namespace Modules\User\Http\Requests;
+namespace Modules\Group\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Factory as ValidationFactory;
 use Illuminate\Support\Facades\DB;
 
 
-class User extends FormRequest
+class Group extends FormRequest
 {
 
   public function __construct(ValidationFactory $validationFactory){
-    $validationFactory->extend(
+/*    $validationFactory->extend(
       'multi_exists',
       function( $attr, $ids, $param ){
         if( count($param) < 1 ) {
@@ -28,7 +28,7 @@ class User extends FormRequest
 
       },
       'Selected group does not exists.'
-    );
+    );*/
 
   }
 
@@ -39,20 +39,16 @@ class User extends FormRequest
      */
     public function rules()
     { 
-
-      
         return [
-          'groups' => 'required|exists:groups,id',
-          'email' => ( request('id') ? 'required|email|unique:users,email,'.request('id') : 'required|email|unique:users,email' ),
-          'username' => ( request('id') ? '' : 'required|unique:users,username' ),
-          'password' => ( request('id') ? '' : 'required|required_with:password_confirm|same:password_confirm|min:6' ),
-          'password_confirm' => 'min:6',
+          'name' => 'required',
+          'description' => 'required',
+
         ];
     }
 
     public function messages() {
       return [
-        'groups.required' => 'Must select a group.',
+        //'groups.required' => 'Must select a group.',
       ];
     }
 

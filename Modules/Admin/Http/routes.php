@@ -15,6 +15,8 @@ Route::group([
       'as' => 'module.admin.dashboard.read'
     ]);
     
+
+    /* PAGE ROUTES */
     Route::get('pages', [
       'uses' => 'PageController@index',
       'as' => 'module.admin.page.read',
@@ -55,6 +57,8 @@ Route::group([
       'uses' => 'PageController@destroy',
       'as' => 'module.admin.page.delete'
     ]);
+    /* PAGE ROUTES */
+
   }
 );
 

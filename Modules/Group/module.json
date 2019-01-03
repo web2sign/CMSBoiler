@@ -1,0 +1,16 @@
+{
+    "name": "Group",
+    "alias": "group",
+    "description": "",
+    "keywords": [],
+    "active": 1,
+    "order": 0,
+    "providers": [
+        "Modules\\Group\\Providers\\GroupServiceProvider"
+    ],
+    "aliases": {},
+    "files": [
+        "start.php"
+    ],
+    "requires": []
+}

@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 use Modules\Admin\Http\Requests\Page as FormRequest;
-use DB;
+use DB, Route;
 
 use Modules\Admin\Entities\Pagemeta;
 
@@ -51,7 +51,7 @@ class PageController extends Controller
           </a>
             <ul class="treeview-menu">
               <li'. (\Request::is('admin/pages') || \Request::is('admin/pages/*') ? ' class="active"' : '') .'><a href="'.url('admin/pages').'"><i class="fa fa-circle-o"></i> View Pages</a></li>
-              '. ( \Helper::hasAccess('module.admin.page.create') ? '<li'. (\Request::is('admin/page/create') ? ' class="active"' : '') .'><a href="'.url('admin/page/create').'"><i class="fa fa-circle-o"></i> Create Pages</a></li>' : '' ) .'
+              '. ( \Helper::hasAccess('module.admin.page.create') ? '<li'. (\Request::is('admin/page/create') ? ' class="active"' : '') .'><a href="'.url('admin/page/create').'"><i class="fa fa-circle-o"></i> Create Page</a></li>' : '' ) .'
             </ul>
           </li>';
         }
@@ -68,15 +68,18 @@ class PageController extends Controller
     public $post_type = "page";
 
     public function __construct(Request $request) {
-      
-      /*if( !method_exists($request->route, 'getAction') ) {
+
+      if( !method_exists($request->route(), 'getAction') ) {
+        //dd($request->route()->getAction());
         return false;
-      }*/
+      }
 
       $action = $request->route()->getAction();
-      $post_type = isset($action['post_type']) ? $action['post_type'] : 'page';
-      $this->post_type = $post_type;
-      $request->request->add(['__post_type'=>$post_type]);
+      if(isset($this->post_type)) {
+        $post_type = isset($action['post_type']) ? $action['post_type'] : $this->post_type;
+        $this->post_type = $post_type;
+        $request->request->add(['__post_type'=>$post_type]);
+      }
     }
 
     /**
@@ -206,6 +209,9 @@ class PageController extends Controller
      */
     public function update($id, FormRequest $request)
     {
+
+      dd( $request->all() );
+
       $parents = Page::select(['id','title'])->where('parent_id', 0);
 
       $page = Page::with('parent')->find($id);

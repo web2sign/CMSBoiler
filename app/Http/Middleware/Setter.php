@@ -24,8 +24,9 @@ class Setter
 
     $controllers = [];
 
-    foreach (Route::getRoutes()->getRoutes() as $route)
-    {
+    if ($request->isMethod('get')) {
+      foreach (Route::getRoutes()->getRoutes() as $route)
+      {
         $action = $route->getAction();
         if (array_key_exists('controller', $action))
         {
@@ -40,8 +41,8 @@ class Setter
               }
             }
         }
+      }
     }
-
     
 
     return $next($request);
