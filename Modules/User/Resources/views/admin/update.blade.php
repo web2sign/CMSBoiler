@@ -9,6 +9,74 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
   <script src="{{url('media/plugins/iCheck/icheck.min.js')}}"></script>
   <script src="{{url('media/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
+  <script src="{{url('media/fine-uploader/fine-uploader.min.js')}}"></script>
+  <script type="text/template" id="qq-template">
+        <div class="qq-uploader-selector qq-uploader">
+            
+            <div class="qq-upload-button-selector qq-upload-button">
+                <div class="btn btn-sm btn-default">Upload a file</div>
+            </div>
+
+            <ul style="display:none;" class="qq-upload-list-selector qq-upload-list" role="region" aria-live="polite" aria-relevant="additions removals">
+                <li>
+                    <span role="status" class="qq-upload-status-text-selector qq-upload-status-text"></span>
+                    <div class="qq-progress-bar-container-selector qq-progress-bar-container">
+                        <div role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" class="qq-progress-bar-selector qq-progress-bar"></div>
+                    </div>
+                    <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
+                    <div class="qq-thumbnail-wrapper">
+                        <img class="qq-thumbnail-selector" qq-max-size="120" qq-server-scale>
+                    </div>
+                    <button type="button" class="qq-upload-cancel-selector qq-upload-cancel">X</button>
+                    <button type="button" class="qq-upload-retry-selector qq-upload-retry">
+                        <span class="qq-btn qq-retry-icon" aria-label="Retry"></span>
+                        Retry
+                    </button>
+
+                    <div class="qq-file-info">
+                        <div class="qq-file-name">
+                            <span class="qq-upload-file-selector qq-upload-file"></span>
+                            <span class="qq-edit-filename-icon-selector qq-btn qq-edit-filename-icon" aria-label="Edit filename"></span>
+                        </div>
+                        <input class="qq-edit-filename-selector qq-edit-filename" tabindex="0" type="text">
+                        <span class="qq-upload-size-selector qq-upload-size"></span>
+                        <button type="button" class="qq-btn qq-upload-delete-selector qq-upload-delete">
+                            <span class="qq-btn qq-delete-icon" aria-label="Delete"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-pause-selector qq-upload-pause">
+                            <span class="qq-btn qq-pause-icon" aria-label="Pause"></span>
+                        </button>
+                        <button type="button" class="qq-btn qq-upload-continue-selector qq-upload-continue">
+                            <span class="qq-btn qq-continue-icon" aria-label="Continue"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+  </script>
+  <script>
+    $(function () {
+
+      $(document).on('click','[data-select]',function(e){
+        e.preventDefault();
+        var img = $('<img />');
+        img.attr('src', $(this).data('thumbnail') );
+        $('.featured-image').empty().addClass('active');
+        img.appendTo('.featured-image');
+        $('.input-featured-image').val( $(this).data('id') );
+        $.fancybox.close();
+        $('.choose-image-btn').data('src', $('.choose-image-btn').data('url') + '?id=' + $(this).data('id') );
+      });
+
+    });
+
+    $(document).on('click','.featured-image',function(e){
+      e.preventDefault();
+      $(this).empty().removeClass('active');
+      $('.choose-image-btn').data('src', $('.choose-image-btn').data('url'));
+    });
+  </script>
 @endsection
 
 @section('body')
@@ -75,6 +143,16 @@
                   </div>
                 </div>
                 <hr>
+                <p>
+                  <label class="blk">Avatar</label>
+                  <input class="input-featured-image" type="hidden" name="meta[avatar]" value="{{ old('meta', $meta)['avatar'] }}" />
+                  @if(isset(old('meta', $meta)['avatar']))
+                  <span class="featured-image active"><img src="{{ url('/') }}/media/thumbnail/{{old('meta', $meta)['avatar']}}?w=150&h=150" /></span>
+                  @else
+                  <span class="featured-image"></span>
+                  @endif
+                  <div><a data-fancy data-type="ajax" data-modal="true" data-src="{{ url('admin/media/choose') . ( old('meta', $meta)['avatar'] ? '?id=' . old('meta', $meta)['avatar'] : '' ) }}" data-url="{{ url('admin/media/choose') }}" class="btn btn-xs btn-default choose-image-btn">Choose Image</a></div>
+                </p>
 
                 <div class="row">
                   <div class="col-sm-6">

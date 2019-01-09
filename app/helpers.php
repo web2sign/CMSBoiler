@@ -48,6 +48,7 @@ class Helper {
   }
 
 
+
   public static function hasAccess($current_route=false){
     $user = self::$user;
     if(!$current_route) {
@@ -120,8 +121,12 @@ class Helper {
     return $modules;
   }
 
-
+  public static function getUser(){
+    return self::$user;
+  }
 }
+
+
 
 
 

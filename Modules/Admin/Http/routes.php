@@ -59,6 +59,14 @@ Route::group([
     ]);
     /* PAGE ROUTES */
 
+    /* THEMES */
+    Route::get('themes', [
+      'uses' => 'ThemeController@index',
+      'as' => 'module.admin.theme.read',
+      'post_type' => 'theme'
+    ]);
+    /* THEMES */
+
   }
 );
 

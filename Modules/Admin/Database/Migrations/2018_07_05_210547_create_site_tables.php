@@ -77,6 +77,7 @@ class CreateSiteTables extends Migration
 
         Schema::create('pages', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned()->index();
             $table->integer('parent_id')->default(0);
             $table->string('slug', 55);
             $table->boolean('status')->default(false);
@@ -87,6 +88,7 @@ class CreateSiteTables extends Migration
             $table->longText('content')->nullable();
             $table->unique(['post_type','slug']);
             $table->timestamps();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
 

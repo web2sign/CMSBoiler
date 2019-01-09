@@ -3,8 +3,10 @@
 @section('body_class', 'hold-transition skin-blue sidebar-mini')
 @section('styles')
   <link rel="stylesheet" href="{{ url('media/plugins/iCheck/square/blue.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css" />
 @endsection
 @section('scripts')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
   <script src="{{url('media/plugins/iCheck/icheck.min.js')}}"></script>
   <script src="{{url('media/plugins/slimScroll/jquery.slimscroll.min.js')}}"></script>
 @endsection

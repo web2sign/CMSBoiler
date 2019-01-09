@@ -9,6 +9,8 @@ $(document).on('click','.close',function(e){
 
 window.uploadBtn = function(selector){
 
+  alert('test');
+
   var uploader = new qq.FineUploader({
       element: $(selector)[0],
       debug: true,

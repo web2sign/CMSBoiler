@@ -5,16 +5,18 @@ namespace Modules\User\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Modules\Admin\Entities\Usession;
+use Modules\Media\Entities\Media;
 use Modules\Admin\Entities\User;
 use Modules\Admin\Entities\Group;
 use Modules\Admin\Entities\Usermeta;
 use Modules\Admin\Entities\Upermit;
 use Modules\User\Http\Requests\User as UserRequest;
-use DB;
+use DB, Hooks, Carbon\Carbon, Helper, File;
 class UserAdminController extends Controller
 {
   public function hook(){
-    \Hooks::add('admin_menu',function(){
+    Hooks::add('admin_menu',function(){
       if( \Helper::hasAccess('module.admin.user.read') ) {
 
         $html = '
@@ -34,6 +36,73 @@ class UserAdminController extends Controller
       }
       return isset($html) ? $html : '';
     }, 21);
+
+    Hooks::add('user_profile', function(){
+      
+      $user = Helper::getUser();
+      $avatar = url( 'media/thumbnail/'. usermeta($user->id,'avatar') ) . '?w=50&h=50';
+      $media = Media::find($avatar);
+      if( $media && !File::exists(public_path( $media->path )) ) {
+        $avatar = url('media/img/user2-160x160.jpg');
+      }
+
+      $html = '
+      <div class="user-panel">
+        <div class="pull-left image">
+          <img src="'. $avatar .'" class="img-circle" alt="User Image" />
+        </div>
+        <div class="pull-left info">
+          <p>'.usermeta($user->id,'first_name').' '.usermeta($user->id,'last_name').'</p>
+          
+          <a href="'.url('admin/user/'.$user->id.'/update').'"><i class="fa fa-edit text-success"></i> Edit Profile</a>
+        </div>
+      </div>
+      ';
+      return $html;
+    });
+
+
+    Hooks::add('user_top_menu', function(){
+      $user = Helper::getUser();
+      $avatar = url( 'media/thumbnail/'. usermeta($user->id,'avatar') ) . '?w=25&h=25';
+      $avatar_main = url( 'media/thumbnail/'. usermeta($user->id,'avatar') ) . '?w=84&h=84';
+
+      $media = Media::find($avatar);
+      if( $media && !File::exists(public_path( $media->path )) ) {
+        $avatar = url('media/img/user2-160x160.jpg');
+        $avatar_main = url('media/img/user2-160x160.jpg');
+      }
+
+      $html = '
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="'.$avatar.'" class="user-image" alt="'.usermeta($user->id,'first_name').' '.usermeta($user->id,'last_name').'">
+              <span class="hidden-xs">'.usermeta($user->id,'first_name').' '.usermeta($user->id,'last_name').'</span>
+            </a>
+            <ul class="dropdown-menu">
+              
+              <li class="user-header">
+                <img src="'.$avatar_main.'" class="img-circle" alt="User Image">
+
+                <p>
+                  '.usermeta($user->id,'first_name').' '.usermeta($user->id,'last_name').'
+                  <small>Member since '. $user->created_at->diffForHumans() .'</small>
+                </p>
+              </li>
+              
+              <li class="user-footer">
+                <div class="pull-left">
+                  <a href="'.url('admin/user/'.$user->id.'/update').'" class="btn btn-default btn-flat">Edit Profile</a>
+                </div>
+                <div class="pull-right">
+                  <a href="'.url('admin/logout').'" class="btn btn-default btn-flat">Sign out</a>
+                </div>
+              </li>
+            </ul>
+      ';
+
+      return $html;
+    });
+
   }
 
     /**
@@ -158,35 +227,37 @@ class UserAdminController extends Controller
 
 
       $custom_permits = [];
-      foreach( request()->get('permits') as $module => $methods){
-        $default_methods = [
-          'read' => 0,
-          'create' => 0,
-          'update' => 0,
-          'delete' => 0
-        ];
+      if(request()->get('permits')){
+        foreach( request()->get('permits') as $module => $methods){
+          $default_methods = [
+            'read' => 0,
+            'create' => 0,
+            'update' => 0,
+            'delete' => 0
+          ];
 
-        foreach($methods as $method) {
-          $default_methods[$method] = 1;
+          foreach($methods as $method) {
+            $default_methods[$method] = 1;
+          }
+
+          if( $user->permits()->where('module', $module)->count() ) {
+            $user->permits()->where('module', $module)->update([
+              'create' => $default_methods['create'],
+              'read' => $default_methods['read'],
+              'update' => $default_methods['update'],
+              'delete' => $default_methods['delete']
+            ]);
+          } else {
+            $custom_permits[] = new UPermit([
+              'module' => $module,
+              'create' => $default_methods['create'],
+              'read' => $default_methods['read'],
+              'update' => $default_methods['update'],
+              'delete' => $default_methods['delete']
+            ]);
+          }
+
         }
-
-        if( $user->permits()->where('module', $module)->count() ) {
-          $user->permits()->where('module', $module)->update([
-            'create' => $default_methods['create'],
-            'read' => $default_methods['read'],
-            'update' => $default_methods['update'],
-            'delete' => $default_methods['delete']
-          ]);
-        } else {
-          $custom_permits[] = new UPermit([
-            'module' => $module,
-            'create' => $default_methods['create'],
-            'read' => $default_methods['read'],
-            'update' => $default_methods['update'],
-            'delete' => $default_methods['delete']
-          ]);
-        }
-
       }
 
       if( count($custom_permits) ) {
@@ -227,6 +298,7 @@ class UserAdminController extends Controller
       });
  
       $meta=[];
+      $meta['avatar']='';
       $user->meta()->get()->map(function($q) use(&$meta){
         $meta[$q->metakey]=$q->metavalue;
         return $q;

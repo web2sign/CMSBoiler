@@ -116,11 +116,11 @@ class MediaController extends Controller
       $ext = $file->getClientOriginalExtension();
 
 
-      $destiny = public_path('uploads/admin/' . Carbon::today()->format('Y/m/d/'));
+      $destiny = 'uploads/admin/' . Carbon::today()->format('Y/m/d/');
       //File::deleteDirectory(public_path($destiny));
 
 
-      if(!File::exists($destiny)) {
+      if(!File::exists( public_path( $destiny) ) ) {
         $check = File::makeDirectory($destiny, 0755, true, true);
         if( !$check ) {
           return [
@@ -131,7 +131,7 @@ class MediaController extends Controller
       }
       $file_name = $file->getClientOriginalName();
       $i = 1;
-      while( File::exists($destiny . $file_name) ) {
+      while( File::exists( public_path( $destiny ) . $file_name ) ) {
         $file_name = $original_name . '-' . $i . '.' . $ext;
         $i++;
       }
@@ -144,7 +144,7 @@ class MediaController extends Controller
         'path' => $destiny . $file_name
       ]);
 
-      $file->move( $destiny, $file_name );
+      $file->move( public_path($destiny), $file_name );
 
       return [
         'success' => true,

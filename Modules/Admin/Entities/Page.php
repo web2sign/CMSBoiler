@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Page extends Model
 {
   protected $table = 'pages';
-  protected $fillable = ['parent_id','post_type','title','slug','description','keywords','content','status'];
+  protected $fillable = ['parent_id','user_id','post_type','title','slug','description','keywords','content','status'];
 
   public function meta(){
     return $this->hasMany(Pagemeta::class,'page_id','id');

@@ -76,6 +76,10 @@ class AdminDatabaseSeeder extends Seeder
         'metakey' => 'address',
         'metavalue' => 'Pasig'
       ]),
+      new Usermeta([
+        'metakey' => 'avatar',
+        'metavalue' => ''
+      ]),
     ]);
     User::find(1)->groups()->sync([1]);
 
@@ -83,6 +87,7 @@ class AdminDatabaseSeeder extends Seeder
 
     Page::create([
       'status' => true,
+      'user_id' => 1,
       'post_type' => 'page',
       'slug' => 'page-1',
       'title'  => 'Parent Page 1',
@@ -96,6 +101,7 @@ class AdminDatabaseSeeder extends Seeder
     ]);
 
     Page::create([
+      'user_id' => 1,
       'slug' => 'page-2',
       'post_type' => 'page',
       'title'  => 'Parent Page 2',
@@ -110,6 +116,7 @@ class AdminDatabaseSeeder extends Seeder
 
     Page::create([
       'parent_id' => 1,
+      'user_id' => 1,
       'slug' => 'page-3',
       'post_type' => 'page',
       'title'  => 'Parent Page 3',
@@ -124,6 +131,7 @@ class AdminDatabaseSeeder extends Seeder
 
     Page::create([
       'parent_id' => 2,
+      'user_id' => 1,
       'slug' => 'page-4',
       'post_type' => 'page',
       'title'  => 'Parent Page 4',
@@ -138,6 +146,7 @@ class AdminDatabaseSeeder extends Seeder
 
     Page::create([
       'parent_id' => 1,
+      'user_id' => 1,
       'slug' => 'page-5',
       'post_type' => 'page',
       'title'  => 'Parent Page 5',
@@ -152,6 +161,7 @@ class AdminDatabaseSeeder extends Seeder
 
     Page::create([
       'parent_id' => 2,
+      'user_id' => 1,
       'slug' => 'page-6',
       'post_type' => 'page',
       'title'  => 'Parent Page 6',

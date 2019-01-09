@@ -12,7 +12,7 @@ use Modules\Admin\Entities\Pagemeta;
 
 use Modules\Admin\Entities\Page;
 
-class PageController extends Controller
+class ThemeController extends Controller
 {
     /**
      * Display anything you want in dashboard coming from this module
@@ -22,36 +22,15 @@ class PageController extends Controller
      * @return Response
      */
     public function hook(){
-      \Hooks::add('dashboard',function(){
-      $active_pages = Page::where('status',true)->count();
-      $html = '
-      <div class="col-lg-4">
-        <!-- small box -->
-        <div class="small-box bg-green">
-          <div class="inner">
-            <h3>'.$active_pages.'</h3>
-
-            <p>Active pages</p>
-          </div>
-          <div class="icon">
-            <i class="ion ion-folder"></i>
-          </div>
-          <a href="' . url('admin/pages') . '" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
-        </div>
-      </div>
-      <!-- ./col -->';
-
-        return $html;
-      }, 10);
 
       \Hooks::add('admin_menu',function(){
-        if( \Helper::hasAccess('module.admin.page.read') ) {
+        if( \Helper::hasAccess('module.admin.theme.read') ) {
 
-          $html = '<li class="treeview '.(\Request::is('admin/pages') || \Request::is('admin/pages/*')  || \Request::is('admin/page/*') ? ' active' : '') .'"><a href="#"><i class="fa fa-book"></i> <span>Manage Pages</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+          $html = '<li class="treeview '.(\Request::is('admin/themes') || \Request::is('admin/themes/*')  || \Request::is('admin/theme/*') ? ' active' : '') .'"><a href="#"><i class="fa fa-book"></i> <span>Manage Themes</span><span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
           </a>
             <ul class="treeview-menu">
-              <li'. (\Request::is('admin/pages') || \Request::is('admin/pages/*') ? ' class="active"' : '') .'><a href="'.url('admin/pages').'"><i class="fa fa-circle-o"></i> View Pages</a></li>
-              '. ( \Helper::hasAccess('module.admin.page.create') ? '<li'. (\Request::is('admin/page/create') ? ' class="active"' : '') .'><a href="'.url('admin/page/create').'"><i class="fa fa-circle-o"></i> Create Page</a></li>' : '' ) .'
+              <li'. (\Request::is('admin/themes') || \Request::is('admin/themes/*') ? ' class="active"' : '') .'><a href="'.url('admin/themes').'"><i class="fa fa-circle-o"></i> View Themes</a></li>
+              '. ( \Helper::hasAccess('module.admin.theme.create') ? '<li'. (\Request::is('admin/theme/create') ? ' class="active"' : '') .'><a href="'.url('admin/theme/create').'"><i class="fa fa-circle-o"></i> Upload Theme</a></li>' : '' ) .'
             </ul>
           </li>';
         }
@@ -60,27 +39,6 @@ class PageController extends Controller
 
     }
 
-
-    /* 
-     * Set a default post type for page
-     *
-    **/
-    public $post_type = "page";
-
-    public function __construct(Request $request) {
-
-      if( !method_exists($request->route(), 'getAction') ) {
-        //dd($request->route()->getAction());
-        return false;
-      }
-
-      $action = $request->route()->getAction();
-      if(isset($this->post_type)) {
-        $post_type = isset($action['post_type']) ? $action['post_type'] : $this->post_type;
-        $this->post_type = $post_type;
-        $request->request->add(['__post_type'=>$post_type]);
-      }
-    }
 
     /**
      * Display a listing of the resource.

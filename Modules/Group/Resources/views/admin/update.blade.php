@@ -105,13 +105,14 @@
                       $g['delete'] = $group->permits()->where('module',$module)->first()->delete;
                     ?>
                     @endif
-                    <td><input {{ $g['read'] ? 'checked="true"' : '' }} data-required-toggle="" value="read" type="checkbox" name="permits[{{$module}}][]" /></td>
-                    <td><input {{ $g['create'] ? 'checked="true"' : '' }} data-required-toggle="read" value="create" type="checkbox" name="permits[{{$module}}][]" /></td>
-                    <td><input {{ $g['update'] ? 'checked="true"' : '' }} data-required-toggle="read" value="update" type="checkbox" name="permits[{{$module}}][]" /></td>
-                    <td><input {{ $g['delete'] ? 'checked="true"' : '' }} data-required-toggle="read" value="delete" type="checkbox" name="permits[{{$module}}][]" /></td>
+                    <td><input {{ $group->id == 1 ? 'disabled="disabled" checked="true"' : '' }} {{ $g['read'] ? 'checked="true"' : '' }} data-required-toggle="" value="read" type="checkbox" name="permits[{{$module}}][]" /></td>
+                    <td><input {{ $group->id == 1 ? 'disabled="disabled" checked="true"' : '' }} {{ $g['create'] ? 'checked="true"' : '' }} data-required-toggle="read" value="create" type="checkbox" name="permits[{{$module}}][]" /></td>
+                    <td><input {{ $group->id == 1 ? 'disabled="disabled" checked="true"' : '' }} {{ $g['update'] ? 'checked="true"' : '' }} data-required-toggle="read" value="update" type="checkbox" name="permits[{{$module}}][]" /></td>
+                    <td><input {{ $group->id == 1 ? 'disabled="disabled" checked="true"' : '' }} {{ $g['delete'] ? 'checked="true"' : '' }} data-required-toggle="read" value="delete" type="checkbox" name="permits[{{$module}}][]" /></td>
                   </tr>
                   @endforeach
                 </table>
+                {!! $group->id == 1 ? '<small>Primary Usergroup\'s permission is not allowed to be modified.</small>' : ''!!}
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
